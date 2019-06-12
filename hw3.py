@@ -1,3 +1,4 @@
+# Read numbers 
 def readNumber(line, index):
   number = 0
   while index < len(line) and line[index].isdigit():
@@ -13,6 +14,8 @@ def readNumber(line, index):
   token = {'type': 'NUMBER', 'number': number}
   return token, index
 
+
+# Read symbols of operation
 def readMul(line, index):
   token = {'type': 'MUL'}
   return token, index + 1
@@ -32,6 +35,8 @@ def readMinus(line, index):
   token = {'type': 'MINUS'}
   return token, index + 1
 
+
+# Tokenize the calculating formula
 def tokenize(line):
   tokens = []
   index = 0
@@ -53,6 +58,7 @@ def tokenize(line):
   return tokens
 
 
+# Calculate multiplications and divisions
 def evaluate_mul_div(tokens):
   index = 1
   while index < len(tokens):
@@ -69,6 +75,7 @@ def evaluate_mul_div(tokens):
   return tokens
 
 
+# Calculate additions and substractions
 def evaluate(tokens):
   answer = 0
   tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
