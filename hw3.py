@@ -36,6 +36,11 @@ def readMinus(line, index):
   return token, index + 1
 
 
+def readPow(line, index):
+  token = {'type': 'POW'}
+  return token, index + 2
+ 
+
 # Tokenize the calculating formula
 def tokenize(line):
   tokens = []
@@ -43,6 +48,8 @@ def tokenize(line):
   while index < len(line):
     if line[index].isdigit():
       (token, index) = readNumber(line, index)
+    elif line[index] == '*' and line[index+1] == '*':
+      (token, index) = readPow(line, index)
     elif line[index] == '*':
       (token, index) = readMul(line, index)
     elif line[index] == '/':
@@ -55,6 +62,19 @@ def tokenize(line):
       print('Invalid character found: ' + line[index])
       exit(1)
     tokens.append(token)
+  return tokens
+
+
+# Calculate powers
+def evaluate_pow(tokens):
+  index = 1
+  while index < len(tokens):
+    if tokens[index]['type'] == 'NUMBER':
+      if tokens[index - 1]['type'] == 'POW':
+        tokens[index - 2]['number'] **= tokens[index]['number']
+        del tokens[index-1:index+1]
+        index -= 2
+    index += 1
   return tokens
 
 
@@ -79,6 +99,7 @@ def evaluate_mul_div(tokens):
 def evaluate(tokens):
   answer = 0
   tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
+  tokens = evaluate_pow(tokens)
   tokens = evaluate_mul_div(tokens)
   index = 1
   while index < len(tokens):
@@ -110,6 +131,10 @@ def runTest():
   test("1+2")
   test("1.0+2.1-3")
   test("1*3/2")
+  test("4.2/3.0*2")
+  test("2**3")
+  test("2**3*4")
+  test("4*2**3")
   print("==== Test finished! ====\n")
 
 runTest()
