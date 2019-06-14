@@ -96,11 +96,8 @@ def evaluate_mul_div(tokens):
 
 
 # Calculate additions and substractions
-def evaluate(tokens):
+def evaluate_plus_minus(tokens):
   answer = 0
-  tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
-  tokens = evaluate_pow(tokens)
-  tokens = evaluate_mul_div(tokens)
   index = 1
   while index < len(tokens):
     if tokens[index]['type'] == 'NUMBER':
@@ -113,6 +110,13 @@ def evaluate(tokens):
         exit(1)
     index += 1
   return answer
+
+
+def evaluate(tokens):
+  tokens.insert(0, {'type': 'PLUS'}) # Insert a dummy '+' token
+  tokens = evaluate_pow(tokens)
+  tokens = evaluate_mul_div(tokens)
+  return evaluate_plus_minus(tokens)
 
 
 def test(line):
